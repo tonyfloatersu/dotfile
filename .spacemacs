@@ -49,20 +49,25 @@ This function should only modify configuration layer settings."
 	 helm
 	 auto-completion
      syntax-checking
-	 ;; better-defaults
+	 lsp
 	 neotree
 	 mu4e
 	 emacs-lisp
 	 git
-	 ;; markdown
 	 python
 	 org
 	 agda
+	 racket
 	 (haskell :variables
-			  haskell-enable-shm-support t)
-	 c-c++
+			  haskell-enable-shm-support t
+			  haskell-completion-backend 'ghc-mod
+              ;; haskell-process-type 'stack-ghci
+			  )
+	 (c-c++ :variables
+			c-c++-backend 'lsp-ccls)
 	 (shell :variables
-			shell-default-height 30
+			shell-default-shell 'term
+			shell-default-width 50
 			shell-default-position 'right)
 	 (wakatime :variables
                wakatime-api-key "e23b6499-9ae4-4ec2-946b-75b6a891a59e")
@@ -70,24 +75,19 @@ This function should only modify configuration layer settings."
 	 (version-control :variables
 					  version-control-diff-tool 'diff-hl
 					  version-control-diff-side 'left)
-	 (latex :variables
-			latex-build-command "LaTeX")
 	 )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(company-coq
-									  lsp-mode
-									  lsp-ui
-									  company-lsp
+									  proof-general
 									  lsp-haskell
-									  ;; lsp-python
-									  ;; flycheck-pkg-config
 									  rainbow-mode
 									  all-the-icons
 									  doom-modeline
 									  company-posframe
+									  company-box
 									  ccls
 									  pdf-tools)
    ;; A list of packages that cannot be updated.
@@ -479,59 +479,36 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (require 'company-posframe)
-  (company-posframe-mode 1)
+  ;; looks, indent guide, modeline, linespacing
+  (require 'company-box)
+  (add-hook 'company-mode-hook 'company-box-mode)
+  (require 'indent-guide)
+  (add-hook 'prog-mode-hook 'indent-guide-mode)
   (setq doom-modeline-height 35)
-  (pdf-tools-install)
-  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/texlive/2018/bin/x86_64-linux/"))
-  (indent-guide-global-mode)
   (global-set-key (kbd ",")
 				  #'(lambda ()
 					  (interactive)
 					  (insert ", ")))
-  ;; line space
   (setq-default line-spacing 0.2)
   (setq org-startup-indented t)
   (setq org-bullets-bullet-list '("-" "=" "Ξ" "□"))
   (setq org-todo-keywords
 		'((sequence "TODO" "HAND" "|" "DONE")))
-  (setf org-todo-keyword-faces '(("TODO" . (:foreground "white" :background "#95A5A6" :weight bold))
-                                 ("HAND" . (:foreground "white" :background "#2E8B57" :weight bold))
-                                 ("DONE" . (:foreground "white" :background "#3498DB" :weight bold))))
-  ;; wheel scroll speed
+  (setf org-todo-keyword-faces
+		'(("TODO" . (:foreground "white" :background "#95A5A6" :weight bold))
+          ("HAND" . (:foreground "white" :background "#2E8B57" :weight bold))
+          ("DONE" . (:foreground "white" :background "#3498DB" :weight bold))))
   (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
   (setq mouse-wheel-progressive-speed t)
-  ;; diff-hl settings
-  (diff-hl-flydiff-mode '(:global t))
-  (diff-hl-margin-mode '(:global t))
-  ;; tab size settings
   (setq-default python-indent-offset 4)
   (setq-default tab-width 4)
-  (setq-default LaTeX-indent-level 4)
-  (setq-default tex-indent-basic 4)
   (setq-default c-basic-offset 4)
   (setq-default indent-tabs-mode t)
-  (require 'ccls)
-  (setq ccls-executable "/usr/bin/ccls")
-  (setq ccls-extra-init-params '(:index (:comments 2) :completion (:detailedLabel t)))
-  (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
-  (push 'company-lsp company-backends-c-mode-common)
-  (setq ccls-sem-highlight-method 'font-lock)
-  (ccls-use-default-rainbow-sem-highlight)
-  (setq python-shell-interpreter "ipython"
-		python-shell-interpreter-args "--simple-prompt -i")
-  (add-hook 'inferior-python-mode-hook
-			(lambda ()
-			  (setq company-mode nil)))
-  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/structured-haskell-mode/elisp")
+  (add-to-list
+   'load-path
+   "/home/anthonysu/.emacs.d/private/structured-haskell-mode/elisp")
   (require 'shm)
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-  (require 'lsp-haskell)
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  (add-hook 'haskell-mode-hook 'flycheck-mode-hook)
-  (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
-  ;; load proof general
-  (load "/home/anthonysu/.emacs.d/private/PG/generic/proof-site.elc")
   (add-hook 'coq-mode-hook #'company-coq-mode)
   (add-hook 'coq-mode-hook
 			(lambda ()
@@ -554,34 +531,99 @@ you should place your code here."
 							("pi" . ?π) ("rho" . ?ρ) ("sigma" . ?σ)
 							("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ)
 							("chi" . ?χ) ("psi" . ?ψ) ("omega" . ?ω)))))
+  (set-fontset-font t 'unicode (font-spec :name "Dejavu Sans Code") nil 'prepend)
+  (defun projectile-project-find-function (dir)
+	(let* ((root (projectile-project-root dir)))
+      (and root (cons 'transient root))))
+  (with-eval-after-load
+	  'project
+	(add-to-list 'project-find-functions 'projectile-project-find-function))
+  (require 'ccls)
+  (setq ccls-executable "/home/anthonysu/tcs-proj/ccls/Release/ccls")
+  (setq lsp-ui-doc-include-signature nil)
+  ;; don't include type signature in the child frame
+  (setq lsp-ui-sideline-show-symbol nil)
+  ;; don't show symbol on the right of info
+  (setq ccls-initialization-options
+		'(:index (:comments 2) :completion (:detailedLabel t)))
+  (setq ccls-sem-highlight-method 'font-lock)
+  (ccls-use-default-rainbow-sem-highlight)
+  (require 'lsp-haskell)
+  (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
+  (add-hook 'haskell-mode-hook #'lsp)
+  (setq lsp-haskell-process-path-hie "/home/anthonysu/.local/bin/hie-wrapper")
+
+  (add-to-list 'load-path "/etc/icons-in-terminal/")
+
+  (require 'icons-in-terminal)
+
+  (setq company-box-icons-unknown 'fa_question_circle)
+
+  (setq company-box-icons-elisp
+	  '((fa_tag :face font-lock-function-name-face) ;; Function
+		(fa_cog :face font-lock-variable-name-face) ;; Variable
+		(fa_cube :face font-lock-constant-face) ;; Feature
+		(md_color_lens :face font-lock-doc-face))) ;; Face
+
+  (setq company-box-icons-yasnippet 'fa_bookmark)
+
+  (setq company-box-icons-lsp
+		'((1 . fa_text_height) ;; Text
+          (2 . (fa_tags :face font-lock-function-name-face)) ;; Method
+          (3 . (fa_tag :face font-lock-function-name-face)) ;; Function
+          (4 . (fa_tag :face font-lock-function-name-face)) ;; Constructor
+          (5 . (fa_cog :foreground "#FF9800")) ;; Field
+          (6 . (fa_cog :foreground "#FF9800")) ;; Variable
+          (7 . (fa_cube :foreground "#7C4DFF")) ;; Class
+          (8 . (fa_cube :foreground "#7C4DFF")) ;; Interface
+          (9 . (fa_cube :foreground "#7C4DFF")) ;; Module
+          (10 . (fa_cog :foreground "#FF9800")) ;; Property
+          (11 . md_settings_system_daydream) ;; Unit
+          (12 . (fa_cog :foreground "#FF9800")) ;; Value
+          (13 . (md_storage :face font-lock-type-face)) ;; Enum
+          (14 . (md_closed_caption :foreground "#009688")) ;; Keyword
+          (15 . md_closed_caption) ;; Snippet
+          (16 . (md_color_lens :face font-lock-doc-face)) ;; Color
+          (17 . fa_file_text_o) ;; File
+          (18 . md_refresh) ;; Reference
+          (19 . fa_folder_open) ;; Folder
+          (20 . (md_closed_caption :foreground "#009688")) ;; EnumMember
+          (21 . (fa_square :face font-lock-constant-face)) ;; Constant
+          (22 . (fa_cube :face font-lock-type-face)) ;; Struct
+          (23 . fa_calendar) ;; Event
+          (24 . fa_square_o) ;; Operator
+          (25 . fa_arrows)) ;; TypeParameter
+		)
+
+  ;; awesome tab
+  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/awesome-tab/")
+  (require 'awesome-tab)
+  (add-hook 'prog-mode-hook 'awesome-tab-mode)
+  (defun awesome-tab-hide-tab-function (x)
+	(let ((name (format "%s" x)))
+      (and
+       (not (string-prefix-p "*epc" name))
+       (not (string-prefix-p "*helm" name))
+       (not (string-prefix-p "*Compile-Log*" name))
+       (not (string-prefix-p "*lsp" name))
+       (not (and (string-prefix-p "magit" name)
+				 (not (file-name-extension name))))
+       )))
+
+  (awesome-tab-hide-tab-function t)
+  (custom-set-faces
+   '(awesome-tab-default ((t (:inherit default :height 1.05))))
+   '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832"
+										:weight ultra-bold :width semi-expanded))))
+   '(awesome-tab-unselected ((t (:inherit awesome-tab-default :foreground "#ffc66d"))))
+   '(term-color-blue ((t (:background "#4068A3" :foreground "#4068A3"))))
+   '(term-color-cyan ((t (:background "#4E9B9B" :foreground "#4E9B9B"))))
+   '(term-color-green ((t (:background "#59963A" :foreground "#59963A"))))
+   '(term-color-red ((t (:background "#A93F43" :foreground "#A93F43"))))
+   '(term-color-white ((t (:background "#7e8a90" :foreground "#7e8a90"))))
+   '(term-color-yellow ((t (:background "#BE8A2D" :foreground "#BE8A2D")))))
   )
 
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
- '(package-selected-packages
-   (quote
-    (auctex-latexmk company-auctex auctex doom-modeline ccls posframe company-posframe mu4e-maildirs-extension mu4e-alert ht cquery iedit smartparens highlight evil goto-chg helm helm-core avy ghub async projectile epl f s dash racket-mode faceup slime-company slime common-lisp-snippets lsp-ui org-mime ocodo-svg-modelines svg-mode-line-themes doom-themes nyan-mode zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme rainbow-mode lsp-python flycheck-pkg-config tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss xcscope haml-mode ggtags emmet-mode memoize font-lock+ noflet ensime sbt-mode scala-mode company-lsp ess-smart-equals ess-R-data-view ctable ess julia-mode lsp-haskell lsp-mode ob-elixir flycheck-mix flycheck-credo alchemist elixir-mode flycheck-clangcheck vimish-fold all-the-icons-ivy all-the-icons-dired queue all-the-icons spaceline-all-the-icons intero hlint-refactor hindent helm-hoogle haskell-snippets flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode geiser web-mode company-web web-completion-data helm-gtags helm-cscope company-coq company-math math-symbol-lists yaml-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern tern coffee-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic wakatime-mode stickyfunc-enhance srefactor flycheck-ycmd disaster company-ycmd ycmd request-deferred let-alist deferred company-c-headers cmake-mode clang-format pdf-tools tablist xterm-color smeargle shell-pop orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download multi-term mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help diff-hl helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete spinner adaptive-wrap ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-key auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line)))
- '(wakatime-cli-path "/usr/bin/wakatime")
- '(wakatime-python-bin nil)
- )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight normal :height 120 :width normal))))
- '(flycheck-error ((t (:underline "#C82210"))))
- '(flycheck-info ((t (:underline "ForestGreen"))))
- '(flycheck-warning ((t (:underline "DarkOrange"))))
- '(lsp-face-highlight-read ((t (:background "gray40"))))
- '(lsp-face-highlight-textual ((t (:background "gray25"))))
- '(lsp-face-highlight-write ((t (:background "gray31")))))
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
@@ -592,22 +634,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (yasnippet-snippets editorconfig counsel-projectile counsel ivy auctex-latexmk company-auctex auctex doom-modeline ccls posframe company-posframe mu4e-maildirs-extension mu4e-alert ht cquery iedit smartparens highlight evil goto-chg helm helm-core avy ghub async projectile epl f s dash racket-mode faceup slime-company slime common-lisp-snippets lsp-ui org-mime ocodo-svg-modelines svg-mode-line-themes doom-themes nyan-mode zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme rainbow-mode lsp-python flycheck-pkg-config tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss xcscope haml-mode ggtags emmet-mode memoize font-lock+ noflet ensime sbt-mode scala-mode company-lsp ess-smart-equals ess-R-data-view ctable ess julia-mode lsp-haskell lsp-mode ob-elixir flycheck-mix flycheck-credo alchemist elixir-mode flycheck-clangcheck vimish-fold all-the-icons-ivy all-the-icons-dired queue all-the-icons spaceline-all-the-icons intero hlint-refactor hindent helm-hoogle haskell-snippets flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode geiser web-mode company-web web-completion-data helm-gtags helm-cscope company-coq company-math math-symbol-lists yaml-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern tern coffee-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic wakatime-mode stickyfunc-enhance srefactor flycheck-ycmd disaster company-ycmd ycmd request-deferred let-alist deferred company-c-headers cmake-mode clang-format pdf-tools tablist xterm-color smeargle shell-pop orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download multi-term mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help diff-hl helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete spinner adaptive-wrap ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-key auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line)))
- '(wakatime-cli-path "/usr/bin/wakatime")
- '(wakatime-python-bin nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight normal :height 120 :width normal))))
- '(flycheck-error ((t (:underline "#C82210"))))
- '(flycheck-info ((t (:underline "ForestGreen"))))
- '(flycheck-warning ((t (:underline "DarkOrange"))))
- '(lsp-face-highlight-read ((t (:background "gray40"))))
- '(lsp-face-highlight-textual ((t (:background "gray25"))))
- '(lsp-face-highlight-write ((t (:background "gray31")))))
+	(zlc pdf-tools helm-xref evil-nerd-commenter doom-modeline diff-hl define-word counsel-projectile counsel swiper ivy company-lsp ace-link flycheck helm avy lsp-mode projectile powerline dash org-plus-contrib yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key wakatime-mode volatile-highlights uuidgen use-package toc-org tablist symon string-inflection spaceline-all-the-icons smeargle shrink-path shell-pop restart-emacs rainbow-mode rainbow-delimiters racket-mode pyvenv pytest pyenv-mode py-isort proof-general popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file neotree nameless multi-term mu4e-maildirs-extension mu4e-alert move-text magit-svn magit-gitflow macrostep lsp-ui lsp-haskell lorem-ipsum live-py-mode link-hint indent-guide importmagic idea-darkula-theme hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mu helm-mode-manager helm-make helm-hoogle helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ fuzzy font-lock+ flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode disaster diminish cython-mode cquery company-statistics company-rtags company-posframe company-ghc company-coq company-cabal company-c-headers company-box company-anaconda column-enforce-mode cmm-mode clean-aindent-mode clang-format centered-cursor-mode ccls browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-jump-helm-line ac-ispell))))
 )
