@@ -51,10 +51,7 @@ This function should only modify configuration layer settings."
 	 javascript
 	 (haskell :variables
 			  haskell-enable-shm-support t
-			  haskell-completion-backend 'company-ghci
-			  ;; haskell-completion-backend 'ghc-mod
-              ;; haskell-process-type 'stack-ghci
-			  )
+			  haskell-completion-backend 'lsp)
 	 (c-c++ :variables
 			c-c++-backend 'lsp-ccls)
 	 (shell :variables
@@ -508,10 +505,10 @@ you should place your code here."
   (setq ccls-sem-highlight-method 'font-lock)
   (ccls-use-default-rainbow-sem-highlight)
 
-  ;; (setq lsp-haskell-process-path-hie "/home/anthonysu/.local/bin/hie-wrapper")
-  ;; (require 'lsp-haskell)
-  ;; (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
-  ;; (add-hook 'haskell-mode-hook #'lsp)
+  (setq lsp-haskell-process-path-hie "/home/anthonysu/.local/bin/hie-wrapper")
+  (require 'lsp-haskell)
+  (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
+  (add-hook 'haskell-mode-hook #'lsp)
   (require 'smartparens-config)
 
   (add-to-list 'load-path "/etc/icons-in-terminal/")
