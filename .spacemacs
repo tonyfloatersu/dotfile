@@ -33,34 +33,26 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(yaml
-	 ;; racket
-	 ;; common-lisp
-	 ;; elixir
-	 ;; html
-	 ;;	 scheme
-	 ;; (scala :variable
-	;; 		scala-auto-start-ensime t)
-	 ;; ----------------------------------------------------------------
-	 ;; Example of useful layers you may want to use right away.
-	 ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-	 ;; <M-m f e R> (Emacs style) to install them.
-	 ;; ------------is:issue is:open ----------------------------------------------------
+   '(
+	 yaml
+	 rust
 	 helm
 	 auto-completion
      syntax-checking
 	 lsp
-	 neotree
-	 mu4e
 	 emacs-lisp
-	 git
 	 python
 	 org
 	 agda
+	 idris
 	 racket
+	 scheme
+	 sml
+	 javascript
 	 (haskell :variables
 			  haskell-enable-shm-support t
-			  haskell-completion-backend 'ghc-mod
+			  haskell-completion-backend 'company-ghci
+			  ;; haskell-completion-backend 'ghc-mod
               ;; haskell-process-type 'stack-ghci
 			  )
 	 (c-c++ :variables
@@ -71,7 +63,6 @@ This function should only modify configuration layer settings."
 			shell-default-position 'right)
 	 (wakatime :variables
                wakatime-api-key "e23b6499-9ae4-4ec2-946b-75b6a891a59e")
-	 ;; spell-checking
 	 (version-control :variables
 					  version-control-diff-tool 'diff-hl
 					  version-control-diff-side 'left)
@@ -88,8 +79,10 @@ This function should only modify configuration layer settings."
 									  doom-modeline
 									  company-posframe
 									  company-box
+									  request-deferred
+									  graphql
 									  ccls
-									  pdf-tools)
+									  treemacs)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
@@ -479,59 +472,24 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  ;; looks, indent guide, modeline, linespacing
   (require 'company-box)
   (add-hook 'company-mode-hook 'company-box-mode)
   (require 'indent-guide)
   (add-hook 'prog-mode-hook 'indent-guide-mode)
   (setq doom-modeline-height 35)
-  (global-set-key (kbd ",")
-				  #'(lambda ()
-					  (interactive)
-					  (insert ", ")))
+  (global-set-key (kbd ",") #'(lambda () (interactive) (insert ", ")))
   (setq-default line-spacing 0.2)
   (setq org-startup-indented t)
   (setq org-bullets-bullet-list '("-" "=" "Ξ" "□"))
-  (setq org-todo-keywords
-		'((sequence "TODO" "HAND" "|" "DONE")))
-  (setf org-todo-keyword-faces
-		'(("TODO" . (:foreground "white" :background "#95A5A6" :weight bold))
-          ("HAND" . (:foreground "white" :background "#2E8B57" :weight bold))
-          ("DONE" . (:foreground "white" :background "#3498DB" :weight bold))))
   (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
   (setq mouse-wheel-progressive-speed t)
   (setq-default python-indent-offset 4)
   (setq-default tab-width 4)
   (setq-default c-basic-offset 4)
   (setq-default indent-tabs-mode t)
-  (add-to-list
-   'load-path
-   "/home/anthonysu/.emacs.d/private/structured-haskell-mode/elisp")
+  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/structured-haskell-mode/elisp")
   (require 'shm)
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-  (add-hook 'coq-mode-hook #'company-coq-mode)
-  (add-hook 'coq-mode-hook
-			(lambda ()
-              (setq-local prettify-symbols-alist
-                          '((":=" . ?≜) ("Proof." . ?∵) ("Qed." . ?■)
-							("Defined." . ?□) ("Admitted." . ?✖)
-							("Alpha" . ?Α) ("Beta" . ?Β) ("Gamma" . ?Γ)
-							("Delta" . ?Δ) ("Epsilon" . ?Ε) ("Zeta" . ?Ζ)
-							("Eta" . ?Η) ("Theta" . ?Θ) ("Iota" . ?Ι)
-							("Kappa" . ?Κ) ("Lambda" . ?Λ) ("Mu" . ?Μ)
-							("Nu" . ?Ν) ("Xi" . ?Ξ) ("Omicron" . ?Ο)
-							("Pi" . ?Π) ("Rho" . ?Ρ) ("Sigma" . ?Σ)
-							("Tau" . ?Τ) ("Upsilon" . ?Υ) ("Phi" . ?Φ)
-							("Chi" . ?Χ) ("Psi" . ?Ψ) ("Omega" . ?Ω)
-							("alpha" . ?α) ("beta" . ?β) ("gamma" . ?γ)
-							("delta" . ?δ) ("epsilon" . ?ε) ("zeta" . ?ζ)
-							("eta" . ?η) ("theta" . ?θ) ("iota" . ?ι)
-							("kappa" . ?κ) ("lambda" . ?λ) ("mu" . ?μ)
-							("nu" . ?ν) ("xi" . ?ξ) ("omicron" . ?ο)
-							("pi" . ?π) ("rho" . ?ρ) ("sigma" . ?σ)
-							("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ)
-							("chi" . ?χ) ("psi" . ?ψ) ("omega" . ?ω)))))
-  (set-fontset-font t 'unicode (font-spec :name "Dejavu Sans Code") nil 'prepend)
   (defun projectile-project-find-function (dir)
 	(let* ((root (projectile-project-root dir)))
       (and root (cons 'transient root))))
@@ -541,6 +499,7 @@ you should place your code here."
   (require 'ccls)
   (setq ccls-executable "/home/anthonysu/tcs-proj/ccls/Release/ccls")
   (setq lsp-ui-doc-include-signature nil)
+  (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
   ;; don't include type signature in the child frame
   (setq lsp-ui-sideline-show-symbol nil)
   ;; don't show symbol on the right of info
@@ -548,27 +507,25 @@ you should place your code here."
 		'(:index (:comments 2) :completion (:detailedLabel t)))
   (setq ccls-sem-highlight-method 'font-lock)
   (ccls-use-default-rainbow-sem-highlight)
-  (require 'lsp-haskell)
-  (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
-  (add-hook 'haskell-mode-hook #'lsp)
-  (setq lsp-haskell-process-path-hie "/home/anthonysu/.local/bin/hie-wrapper")
+
+  ;; (setq lsp-haskell-process-path-hie "/home/anthonysu/.local/bin/hie-wrapper")
+  ;; (require 'lsp-haskell)
+  ;; (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
+  ;; (add-hook 'haskell-mode-hook #'lsp)
+  (require 'smartparens-config)
 
   (add-to-list 'load-path "/etc/icons-in-terminal/")
-
   (require 'icons-in-terminal)
-
   (setq company-box-icons-unknown 'fa_question_circle)
-
+  (setq company-box-max-candidates 50)
   (setq company-box-icons-elisp
 	  '((fa_tag :face font-lock-function-name-face) ;; Function
 		(fa_cog :face font-lock-variable-name-face) ;; Variable
 		(fa_cube :face font-lock-constant-face) ;; Feature
 		(md_color_lens :face font-lock-doc-face))) ;; Face
-
   (setq company-box-icons-yasnippet 'fa_bookmark)
-
   (setq company-box-icons-lsp
-		'((1 . fa_text_height) ;; Text
+		'((1 . fa_codepen) ;; Text
           (2 . (fa_tags :face font-lock-function-name-face)) ;; Method
           (3 . (fa_tag :face font-lock-function-name-face)) ;; Function
           (4 . (fa_tag :face font-lock-function-name-face)) ;; Constructor
@@ -594,23 +551,10 @@ you should place your code here."
           (24 . fa_square_o) ;; Operator
           (25 . fa_arrows)) ;; TypeParameter
 		)
-
-  ;; awesome tab
   (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/awesome-tab/")
   (require 'awesome-tab)
   (add-hook 'prog-mode-hook 'awesome-tab-mode)
-  (defun awesome-tab-hide-tab-function (x)
-	(let ((name (format "%s" x)))
-      (and
-       (not (string-prefix-p "*epc" name))
-       (not (string-prefix-p "*helm" name))
-       (not (string-prefix-p "*Compile-Log*" name))
-       (not (string-prefix-p "*lsp" name))
-       (not (and (string-prefix-p "magit" name)
-				 (not (file-name-extension name))))
-       )))
 
-  (awesome-tab-hide-tab-function t)
   (custom-set-faces
    '(awesome-tab-default ((t (:inherit default :height 1.05))))
    '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832"
@@ -622,6 +566,29 @@ you should place your code here."
    '(term-color-red ((t (:background "#A93F43" :foreground "#A93F43"))))
    '(term-color-white ((t (:background "#7e8a90" :foreground "#7e8a90"))))
    '(term-color-yellow ((t (:background "#BE8A2D" :foreground "#BE8A2D")))))
+  (add-hook 'coq-mode-hook #'company-coq-mode)
+  (add-hook 'coq-mode-hook
+			(lambda ()
+              (setq-local prettify-symbols-alist
+                          '((":=" . ?≜) ("Proof." . ?∵) ("Qed." . ?■)
+							("Defined." . ?□) ("Admitted." . ?✖)
+							("Alpha" . ?Α) ("Beta" . ?Β) ("Gamma" . ?Γ)
+							("Delta" . ?Δ) ("Epsilon" . ?Ε) ("Zeta" . ?Ζ)
+							("Eta" . ?Η) ("Theta" . ?Θ) ("Iota" . ?Ι)
+							("Kappa" . ?Κ) ("Lambda" . ?Λ) ("Mu" . ?Μ)
+							("Nu" . ?Ν) ("Xi" . ?Ξ) ("Omicron" . ?Ο)
+							("Pi" . ?Π) ("Rho" . ?Ρ) ("Sigma" . ?Σ)
+							("Tau" . ?Τ) ("Upsilon" . ?Υ) ("Phi" . ?Φ)
+							("Chi" . ?Χ) ("Psi" . ?Ψ) ("Omega" . ?Ω)
+							("alpha" . ?α) ("beta" . ?β) ("gamma" . ?γ)
+							("delta" . ?δ) ("epsilon" . ?ε) ("zeta" . ?ζ)
+							("eta" . ?η) ("theta" . ?θ) ("iota" . ?ι)
+							("kappa" . ?κ) ("lambda" . ?λ) ("mu" . ?μ)
+							("nu" . ?ν) ("xi" . ?ξ) ("omicron" . ?ο)
+							("pi" . ?π) ("rho" . ?ρ) ("sigma" . ?σ)
+							("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ)
+							("chi" . ?χ) ("psi" . ?ψ) ("omega" . ?ω)))))
+  (set-fontset-font t 'unicode (font-spec :name "Dejavu Sans Code") nil 'prepend)
   )
 
 (defun dotspacemacs/emacs-custom-settings ()
@@ -636,5 +603,19 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-	(zlc pdf-tools helm-xref evil-nerd-commenter doom-modeline diff-hl define-word counsel-projectile counsel swiper ivy company-lsp ace-link flycheck helm avy lsp-mode projectile powerline dash org-plus-contrib yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key wakatime-mode volatile-highlights uuidgen use-package toc-org tablist symon string-inflection spaceline-all-the-icons smeargle shrink-path shell-pop restart-emacs rainbow-mode rainbow-delimiters racket-mode pyvenv pytest pyenv-mode py-isort proof-general popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file neotree nameless multi-term mu4e-maildirs-extension mu4e-alert move-text magit-svn magit-gitflow macrostep lsp-ui lsp-haskell lorem-ipsum live-py-mode link-hint indent-guide importmagic idea-darkula-theme hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mu helm-mode-manager helm-make helm-hoogle helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ fuzzy font-lock+ flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode disaster diminish cython-mode cquery company-statistics company-rtags company-posframe company-ghc company-coq company-cabal company-c-headers company-box company-anaconda column-enforce-mode cmm-mode clean-aindent-mode clang-format centered-cursor-mode ccls browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-jump-helm-line ac-ispell))))
+	(treemacs graphql request-deferred wanderlust helm-gtags godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc ggtags flycheck-gometalinter flycheck-golangci-lint counsel-gtags company-go go-mode idris-mode prop-menu yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key wakatime-mode volatile-highlights uuidgen use-package toc-org symon string-inflection spaceline-all-the-icons smeargle shell-pop restart-emacs rainbow-mode rainbow-delimiters racket-mode pyvenv pytest pyenv-mode py-isort proof-general popwin pippel pipenv pip-requirements persp-mode pdf-tools pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file neotree nameless multi-term mu4e-maildirs-extension mu4e-alert move-text magit-svn magit-gitflow macrostep lsp-ui lsp-haskell lorem-ipsum live-py-mode link-hint indent-guide importmagic idea-darkula-theme hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mu helm-mode-manager helm-make helm-hoogle helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ geiser fuzzy font-lock+ flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline disaster diminish diff-hl define-word cython-mode cquery counsel-projectile company-statistics company-rtags company-posframe company-lsp company-ghc company-coq company-cabal company-c-headers company-box company-anaconda column-enforce-mode cmm-mode clean-aindent-mode clang-format centered-cursor-mode ccls browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(awesome-tab-default ((t (:inherit default :height 1.05))))
+ '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832" :weight ultra-bold :width semi-expanded))))
+ '(awesome-tab-unselected ((t (:inherit awesome-tab-default :foreground "#ffc66d"))))
+ '(term-color-blue ((t (:background "#4068A3" :foreground "#4068A3"))))
+ '(term-color-cyan ((t (:background "#4E9B9B" :foreground "#4E9B9B"))))
+ '(term-color-green ((t (:background "#59963A" :foreground "#59963A"))))
+ '(term-color-red ((t (:background "#A93F43" :foreground "#A93F43"))))
+ '(term-color-white ((t (:background "#7e8a90" :foreground "#7e8a90"))))
+ '(term-color-yellow ((t (:background "#BE8A2D" :foreground "#BE8A2D")))))
 )
