@@ -480,11 +480,9 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   (add-to-list 'load-path "/usr/share/icons-in-terminal")
-  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/emacs-application-framework/")
   (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/structured-haskell-mode/elisp")
   (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/awesome-tab/")
   (require 'shm)
-  (require 'eaf)
   (require 'smartparens-config)
   (require 'icons-in-terminal)
   (require 'awesome-tab)
@@ -521,8 +519,6 @@ you should place your code here."
 
   (diff-hl-flydiff-mode '(:global t))
   (add-to-list 'auto-mode-alist '("\\.tcc" . c++-mode))
-
-  (setq lsp-python-ms-auto-install-server t)
 
   (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
   (setq mouse-wheel-progressive-speed t)
