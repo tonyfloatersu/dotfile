@@ -33,53 +33,59 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
-	 yaml
-	 rust
-	 helm
-	 auto-completion
+   '(systemd
+	 (spell-checking :variables
+					 spell-checking-enable-by-default nil
+					 spell-checking-enable-auto-dictionary t
+					 enable-flyspell-auto-completion t)
+	 ;; ocaml
+     (latex :variables
+			latex-enable-folding t
+			latex-enable-auto-fill t)
+     helm
+     (auto-completion :variables
+					  auto-completion-use-company-box t)
      syntax-checking
-	 lsp
-	 emacs-lisp
-	 python
-	 org
+     lsp
+     emacs-lisp
+     (python :variables
+			 python-backend 'lsp
+			 python-lsp-server 'pyright)
 	 agda
-	 idris
-	 racket
-	 scheme
-	 sml
-	 javascript
-	 (haskell :variables
-			  haskell-enable-shm-support t
-			  haskell-completion-backend 'lsp)
+     idris
+     racket
+     sml
+	 coq
+	 (treemacs :variables
+			   treemacs-use-git-mode 'deferred)
+     (haskell :variables
+              haskell-enable-shm-support t
+              haskell-completion-backend 'lsp)
+	 (cmake :variables
+			cmake-backend 'lsp)
 	 (c-c++ :variables
-			c-c++-backend 'lsp-ccls)
-	 (shell :variables
-			shell-default-shell 'term
+            c-c++-backend 'lsp-ccls
+			c-c++-enable-clang-format-on-save t)
+     (shell :variables
+            shell-default-shell 'ansi-term
 			shell-default-width 50
-			shell-default-position 'right)
-	 (wakatime :variables
-               wakatime-api-key "e23b6499-9ae4-4ec2-946b-75b6a891a59e")
-	 (version-control :variables
-					  version-control-diff-tool 'diff-hl
-					  version-control-diff-side 'left)
-	 )
+			shell-default-term-shell "/bin/zsh"
+            shell-default-position 'right)
+     (wakatime :variables
+               wakatime-api-key "e23b6499-9ae4-4ec2-946b-75b6a891a59e"
+			   wakatime-cli-path "/usr/bin/wakatime")
+     (version-control :variables
+                      version-control-diff-tool 'diff-hl
+                      version-control-diff-side 'left
+					  version-control-global-margin t))
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(company-coq
-									  proof-general
-									  lsp-haskell
-									  rainbow-mode
-									  all-the-icons
-									  doom-modeline
-									  company-posframe
-									  company-box
-									  request-deferred
-									  graphql
-									  ccls
-									  treemacs)
+   dotspacemacs-additional-packages '(doom-themes
+                                      rainbow-mode
+                                      all-the-icons
+									  all-the-icons-dired)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
@@ -106,12 +112,12 @@ It should only modify the values of Spacemacs settings."
    ;; to compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
    ;; (default nil)
-   dotspacemacs-enable-emacs-pdumper nil
+   dotspacemacs-enable-emacs-pdumper t
 
    ;; File path pointing to emacs 27.1 executable compiled with support
    ;; for the portable dumper (this is currently the branch pdumper).
    ;; (default "emacs-27.0.50")
-   dotspacemacs-emacs-pdumper-executable-file "emacs-27.0.50"
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
 
    ;; Name of the Spacemacs dump file. This is the file will be created by the
    ;; portable dumper in the cache directory under dumps sub-directory.
@@ -175,7 +181,7 @@ It should only modify the values of Spacemacs settings."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner "/home/anthonysu/.emacs.d/private/banner-light.png"
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -184,7 +190,7 @@ It should only modify the values of Spacemacs settings."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((recents . 20)
-								(projects . 15))
+								(projects . 10))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
 
@@ -193,14 +199,13 @@ It should only modify the values of Spacemacs settings."
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
-   dotspacemacs-initial-scratch-message nil
+   dotspacemacs-initial-scratch-messagege nil
 
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(idea-darkula
-						 spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(doom-spacegrey
+						 doom-vibrant)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -218,7 +223,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 16
+                               :size 24
                                :weight normal
                                :width normal)
 
@@ -445,7 +450,8 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env))
+  (spacemacs/load-spacemacs-env)
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -453,6 +459,9 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (menu-bar-mode -1)
+  (toggle-scroll-bar -1)
+  (tool-bar-mode -1)
   )
 
 (defun dotspacemacs/user-load ()
@@ -469,90 +478,72 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (require 'company-box)
-  (add-hook 'company-mode-hook 'company-box-mode)
-  (require 'indent-guide)
-  (add-hook 'prog-mode-hook 'indent-guide-mode)
+
+  (add-to-list 'load-path "/usr/share/icons-in-terminal")
+  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/emacs-application-framework/")
+  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/structured-haskell-mode/elisp")
+  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/awesome-tab/")
+  (require 'shm)
+  (require 'eaf)
+  (require 'smartparens-config)
+  (require 'icons-in-terminal)
+  (require 'awesome-tab)
+  (awesome-tab-mode t)
+
+  (global-set-key (kbd "C-c C-<right>") 'awesome-tab-forward)
+  (global-set-key (kbd "C-c C-<left>") 'awesome-tab-backward)
+  (global-set-key (kbd "C-c C-<down>") 'awesome-tab-forward-group)
+  (global-set-key (kbd "C-c C-<up>") 'awesome-tab-backward-group)
+
+  (setq treemacs-width 40)
+
+  (setq LaTeX-item-indent 0)
+  (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+
+  (setq-default fill-column 80)
   (setq doom-modeline-height 35)
+
   (global-set-key (kbd ",") #'(lambda () (interactive) (insert ", ")))
-  (setq-default line-spacing 0.2)
+  (setq-default line-spacing 0.3)
+  (add-hook 'python-mode-hook
+			(function (lambda ()
+						(setq indent-tabs-mode nil
+							  tab-width 4))))
   (setq org-startup-indented t)
-  (setq org-bullets-bullet-list '("-" "=" "Ξ" "□"))
+  (setq org-bullets-bullet-list '("#" "-" "=" "+" "⁖" "□" "■"))
+  (setq org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)"
+                                      "|" "DONE(d)" "CANCELLED(c)"))
+        org-todo-keyword-faces '(("TODO" :foreground "#7c7c75" :weight normal :underline t)
+                                 ("WAITING" :foreground "#9f7efe" :weight normal :underline t)
+                                 ("INPROGRESS" :foreground "#0098dd" :weight normal :underline t)
+                                 ("DONE" :foreground "#50a14f" :weight normal :underline t)
+                                 ("CANCELLED" :foreground "#ff6480" :weight normal :underline t)))
+
+  (diff-hl-flydiff-mode '(:global t))
+  (add-to-list 'auto-mode-alist '("\\.tcc" . c++-mode))
+
+  (setq lsp-python-ms-auto-install-server t)
+
   (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
   (setq mouse-wheel-progressive-speed t)
   (setq-default python-indent-offset 4)
   (setq-default tab-width 4)
   (setq-default c-basic-offset 4)
   (setq-default indent-tabs-mode t)
-  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/structured-haskell-mode/elisp")
-  (require 'shm)
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+  (setq lsp-file-watch-threshold nil)
   (defun projectile-project-find-function (dir)
 	(let* ((root (projectile-project-root dir)))
       (and root (cons 'transient root))))
   (with-eval-after-load
 	  'project
 	(add-to-list 'project-find-functions 'projectile-project-find-function))
-  (require 'ccls)
-  (setq ccls-executable "/home/anthonysu/tcs-proj/ccls/Release/ccls")
-  (setq lsp-ui-doc-include-signature nil)
-  (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
-  ;; don't include type signature in the child frame
-  (setq lsp-ui-sideline-show-symbol nil)
-  ;; don't show symbol on the right of info
-  (setq ccls-initialization-options
-		'(:index (:comments 2) :completion (:detailedLabel t)))
-  (setq ccls-sem-highlight-method 'font-lock)
-  (ccls-use-default-rainbow-sem-highlight)
-
-  (setq lsp-haskell-process-path-hie "/home/anthonysu/.local/bin/hie-wrapper")
-  (require 'lsp-haskell)
-  (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
-  (add-hook 'haskell-mode-hook #'lsp)
-  (require 'smartparens-config)
-
-  (add-to-list 'load-path "/etc/icons-in-terminal/")
-  (require 'icons-in-terminal)
-  (setq company-box-icons-unknown 'fa_question_circle)
-  (setq company-box-max-candidates 50)
-  (setq company-box-icons-elisp
-	  '((fa_tag :face font-lock-function-name-face) ;; Function
-		(fa_cog :face font-lock-variable-name-face) ;; Variable
-		(fa_cube :face font-lock-constant-face) ;; Feature
-		(md_color_lens :face font-lock-doc-face))) ;; Face
-  (setq company-box-icons-yasnippet 'fa_bookmark)
-  (setq company-box-icons-lsp
-		'((1 . fa_codepen) ;; Text
-          (2 . (fa_tags :face font-lock-function-name-face)) ;; Method
-          (3 . (fa_tag :face font-lock-function-name-face)) ;; Function
-          (4 . (fa_tag :face font-lock-function-name-face)) ;; Constructor
-          (5 . (fa_cog :foreground "#FF9800")) ;; Field
-          (6 . (fa_cog :foreground "#FF9800")) ;; Variable
-          (7 . (fa_cube :foreground "#7C4DFF")) ;; Class
-          (8 . (fa_cube :foreground "#7C4DFF")) ;; Interface
-          (9 . (fa_cube :foreground "#7C4DFF")) ;; Module
-          (10 . (fa_cog :foreground "#FF9800")) ;; Property
-          (11 . md_settings_system_daydream) ;; Unit
-          (12 . (fa_cog :foreground "#FF9800")) ;; Value
-          (13 . (md_storage :face font-lock-type-face)) ;; Enum
-          (14 . (md_closed_caption :foreground "#009688")) ;; Keyword
-          (15 . md_closed_caption) ;; Snippet
-          (16 . (md_color_lens :face font-lock-doc-face)) ;; Color
-          (17 . fa_file_text_o) ;; File
-          (18 . md_refresh) ;; Reference
-          (19 . fa_folder_open) ;; Folder
-          (20 . (md_closed_caption :foreground "#009688")) ;; EnumMember
-          (21 . (fa_square :face font-lock-constant-face)) ;; Constant
-          (22 . (fa_cube :face font-lock-type-face)) ;; Struct
-          (23 . fa_calendar) ;; Event
-          (24 . fa_square_o) ;; Operator
-          (25 . fa_arrows)) ;; TypeParameter
-		)
-  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/awesome-tab/")
-  (require 'awesome-tab)
-  (add-hook 'prog-mode-hook 'awesome-tab-mode)
+  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
 
   (custom-set-faces
+   '(diff-hl-change ((t (:background "#3a81c3" :foreground "#3a81c3"))))
+   '(diff-hl-insert ((t (:background "#7ccd7c" :foreground "#7ccd7c"))))
+   '(diff-hl-delete ((t (:background "#ee6363" :foreground "#ee6363"))))
    '(awesome-tab-default ((t (:inherit default :height 1.05))))
    '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832"
 										:weight ultra-bold :width semi-expanded))))
@@ -563,29 +554,7 @@ you should place your code here."
    '(term-color-red ((t (:background "#A93F43" :foreground "#A93F43"))))
    '(term-color-white ((t (:background "#7e8a90" :foreground "#7e8a90"))))
    '(term-color-yellow ((t (:background "#BE8A2D" :foreground "#BE8A2D")))))
-  (add-hook 'coq-mode-hook #'company-coq-mode)
-  (add-hook 'coq-mode-hook
-			(lambda ()
-              (setq-local prettify-symbols-alist
-                          '((":=" . ?≜) ("Proof." . ?∵) ("Qed." . ?■)
-							("Defined." . ?□) ("Admitted." . ?✖)
-							("Alpha" . ?Α) ("Beta" . ?Β) ("Gamma" . ?Γ)
-							("Delta" . ?Δ) ("Epsilon" . ?Ε) ("Zeta" . ?Ζ)
-							("Eta" . ?Η) ("Theta" . ?Θ) ("Iota" . ?Ι)
-							("Kappa" . ?Κ) ("Lambda" . ?Λ) ("Mu" . ?Μ)
-							("Nu" . ?Ν) ("Xi" . ?Ξ) ("Omicron" . ?Ο)
-							("Pi" . ?Π) ("Rho" . ?Ρ) ("Sigma" . ?Σ)
-							("Tau" . ?Τ) ("Upsilon" . ?Υ) ("Phi" . ?Φ)
-							("Chi" . ?Χ) ("Psi" . ?Ψ) ("Omega" . ?Ω)
-							("alpha" . ?α) ("beta" . ?β) ("gamma" . ?γ)
-							("delta" . ?δ) ("epsilon" . ?ε) ("zeta" . ?ζ)
-							("eta" . ?η) ("theta" . ?θ) ("iota" . ?ι)
-							("kappa" . ?κ) ("lambda" . ?λ) ("mu" . ?μ)
-							("nu" . ?ν) ("xi" . ?ξ) ("omicron" . ?ο)
-							("pi" . ?π) ("rho" . ?ρ) ("sigma" . ?σ)
-							("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ)
-							("chi" . ?χ) ("psi" . ?ψ) ("omega" . ?ω)))))
-  (set-fontset-font t 'unicode (font-spec :name "Dejavu Sans Code") nil 'prepend)
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
   )
 
 (defun dotspacemacs/emacs-custom-settings ()
@@ -598,9 +567,11 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
-   (quote
-	(treemacs graphql request-deferred wanderlust helm-gtags godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc ggtags flycheck-gometalinter flycheck-golangci-lint counsel-gtags company-go go-mode idris-mode prop-menu yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key wakatime-mode volatile-highlights uuidgen use-package toc-org symon string-inflection spaceline-all-the-icons smeargle shell-pop restart-emacs rainbow-mode rainbow-delimiters racket-mode pyvenv pytest pyenv-mode py-isort proof-general popwin pippel pipenv pip-requirements persp-mode pdf-tools pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file neotree nameless multi-term mu4e-maildirs-extension mu4e-alert move-text magit-svn magit-gitflow macrostep lsp-ui lsp-haskell lorem-ipsum live-py-mode link-hint indent-guide importmagic idea-darkula-theme hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mu helm-mode-manager helm-make helm-hoogle helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ geiser fuzzy font-lock+ flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline disaster diminish diff-hl define-word cython-mode cquery counsel-projectile company-statistics company-rtags company-posframe company-lsp company-ghc company-coq company-cabal company-c-headers company-box company-anaconda column-enforce-mode cmm-mode clean-aindent-mode clang-format centered-cursor-mode ccls browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))))
+   '(systemd mu4e-conversation magit treemacs-icons-dired doom-themes dap-mode utop tuareg caml ocp-indent flycheck-ocaml merlin dune treemacs graphql request-deferred wanderlust helm-gtags godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc ggtags flycheck-gometalinter flycheck-golangci-lint counsel-gtags company-go go-mode idris-mode prop-menu yasnippet-snippets yapfify yaml-mode xterm-color ws-butler winum which-key wakatime-mode volatile-highlights uuidgen use-package toc-org symon string-inflection spaceline-all-the-icons smeargle shell-pop restart-emacs rainbow-mode rainbow-delimiters racket-mode pyvenv pytest pyenv-mode py-isort proof-general popwin pippel pipenv pip-requirements persp-mode pdf-tools pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file neotree nameless multi-term mu4e-maildirs-extension mu4e-alert move-text magit-svn magit-gitflow macrostep lsp-ui lsp-haskell lorem-ipsum live-py-mode link-hint indent-guide importmagic idea-darkula-theme hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mu helm-mode-manager helm-make helm-hoogle helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ geiser fuzzy font-lock+ flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline disaster diminish diff-hl define-word cython-mode cquery counsel-projectile company-statistics company-rtags company-posframe company-lsp company-ghc company-coq company-cabal company-c-headers company-anaconda column-enforce-mode cmm-mode clean-aindent-mode clang-format centered-cursor-mode ccls browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
+ '(wakatime-cli-path "/usr/bin/wakatime")
+ '(wakatime-python-bin nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -609,6 +580,9 @@ This function is called at the very end of Spacemacs initialization."
  '(awesome-tab-default ((t (:inherit default :height 1.05))))
  '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832" :weight ultra-bold :width semi-expanded))))
  '(awesome-tab-unselected ((t (:inherit awesome-tab-default :foreground "#ffc66d"))))
+ '(diff-hl-change ((t (:background "#3a81c3" :foreground "#3a81c3"))))
+ '(diff-hl-delete ((t (:background "#ee6363" :foreground "#ee6363"))))
+ '(diff-hl-insert ((t (:background "#7ccd7c" :foreground "#7ccd7c"))))
  '(term-color-blue ((t (:background "#4068A3" :foreground "#4068A3"))))
  '(term-color-cyan ((t (:background "#4E9B9B" :foreground "#4E9B9B"))))
  '(term-color-green ((t (:background "#59963A" :foreground "#59963A"))))
