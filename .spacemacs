@@ -59,7 +59,6 @@ This function should only modify configuration layer settings."
 	 (treemacs :variables
 			   treemacs-use-git-mode 'deferred)
      (haskell :variables
-              haskell-enable-shm-support t
               haskell-completion-backend 'lsp)
 	 (cmake :variables
 			cmake-backend 'lsp)
@@ -480,10 +479,7 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   (add-to-list 'load-path "/usr/share/icons-in-terminal")
-  (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/structured-haskell-mode/elisp")
   (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/awesome-tab/")
-  (require 'shm)
-  (require 'smartparens-config)
   (require 'icons-in-terminal)
   (require 'awesome-tab)
   (awesome-tab-mode t)
