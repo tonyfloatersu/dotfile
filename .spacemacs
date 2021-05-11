@@ -38,7 +38,8 @@ This function should only modify configuration layer settings."
 					 spell-checking-enable-by-default nil
 					 spell-checking-enable-auto-dictionary t
 					 enable-flyspell-auto-completion t)
-	 ;; ocaml
+	 (ocaml :variables
+			ocaml-format-before-save t)
      (latex :variables
 			latex-enable-folding t
 			latex-enable-auto-fill t)
@@ -89,7 +90,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(vi-tilde-fringe)
+   dotspacemacs-excluded-packages '(vi-tilde-fringe
+									flycheck-ocaml)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and deletes any unused
@@ -143,6 +145,8 @@ It should only modify the values of Spacemacs settings."
    ;; performance issues due to garbage collection operations.
    ;; (default '(100000000 0.1))
    dotspacemacs-gc-cons '(100000000 0.1)
+
+   dotspacemacs-read-process-output-max (* 1024 1024)
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
