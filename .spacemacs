@@ -34,50 +34,50 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(systemd
-	 (spell-checking :variables
-					 spell-checking-enable-by-default nil
-					 spell-checking-enable-auto-dictionary t
-					 enable-flyspell-auto-completion t)
-	 (ocaml :variables
-			ocaml-format-before-save t)
+     (spell-checking :variables
+                     spell-checking-enable-by-default nil
+                     spell-checking-enable-auto-dictionary t
+                     enable-flyspell-auto-completion t)
+     (ocaml :variables
+            ocaml-format-before-save t)
      (latex :variables
-			latex-enable-folding t
-			latex-enable-auto-fill t)
+            latex-enable-folding t
+            latex-enable-auto-fill t)
      helm
      (auto-completion :variables
-					  auto-completion-use-company-box t)
+                      auto-completion-use-company-box t)
      syntax-checking
      lsp
      emacs-lisp
      (python :variables
-			 python-backend 'lsp
-			 python-lsp-server 'pyright)
-	 agda
+             python-backend 'lsp
+             python-lsp-server 'pyright)
+     agda
      idris
      racket
      sml
-	 coq
-	 (treemacs :variables
-			   treemacs-use-git-mode 'deferred)
+     coq
+     (treemacs :variables
+               treemacs-use-git-mode 'deferred)
      (haskell :variables
               haskell-completion-backend 'lsp)
-	 (cmake :variables
-			cmake-backend 'lsp)
-	 (c-c++ :variables
+     (cmake :variables
+            cmake-backend 'lsp)
+     (c-c++ :variables
             c-c++-backend 'lsp-ccls
-			c-c++-enable-clang-format-on-save t)
+            c-c++-enable-clang-format-on-save t)
      (shell :variables
             shell-default-shell 'ansi-term
-			shell-default-width 50
-			shell-default-term-shell "/bin/zsh"
+            shell-default-width 50
+            shell-default-term-shell "/bin/zsh"
             shell-default-position 'right)
      (wakatime :variables
                wakatime-api-key "e23b6499-9ae4-4ec2-946b-75b6a891a59e"
-			   wakatime-cli-path "/usr/bin/wakatime")
+               wakatime-cli-path "/usr/bin/wakatime")
      (version-control :variables
                       version-control-diff-tool 'diff-hl
                       version-control-diff-side 'left
-					  version-control-global-margin t))
+                      version-control-global-margin t))
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
@@ -85,13 +85,13 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(doom-themes
                                       rainbow-mode
                                       all-the-icons
-									  all-the-icons-dired)
+                                      all-the-icons-dired)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(vi-tilde-fringe
-									flycheck-ocaml)
+                                    flycheck-ocaml)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and deletes any unused
@@ -194,7 +194,7 @@ It should only modify the values of Spacemacs settings."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((recents . 20)
-								(projects . 10))
+                                (projects . 10))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
 
@@ -209,7 +209,7 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(doom-spacegrey
-						 doom-vibrant)
+                         doom-vibrant)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -506,9 +506,9 @@ you should place your code here."
   (global-set-key (kbd ",") #'(lambda () (interactive) (insert ", ")))
   (setq-default line-spacing 0.3)
   (add-hook 'python-mode-hook
-			(function (lambda ()
-						(setq indent-tabs-mode nil
-							  tab-width 4))))
+            (function (lambda ()
+                        (setq indent-tabs-mode nil
+                              tab-width 4))))
   (setq org-startup-indented t)
   (setq org-bullets-bullet-list '("#" "-" "=" "+" "⁖" "□" "■"))
   (setq org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)"
@@ -531,11 +531,11 @@ you should place your code here."
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
   (setq lsp-file-watch-threshold nil)
   (defun projectile-project-find-function (dir)
-	(let* ((root (projectile-project-root dir)))
+    (let* ((root (projectile-project-root dir)))
       (and root (cons 'transient root))))
   (with-eval-after-load
-	  'project
-	(add-to-list 'project-find-functions 'projectile-project-find-function))
+      'project
+    (add-to-list 'project-find-functions 'projectile-project-find-function))
   (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
 
   (custom-set-faces
@@ -544,7 +544,7 @@ you should place your code here."
    '(diff-hl-delete ((t (:background "#ee6363" :foreground "#ee6363"))))
    '(awesome-tab-default ((t (:inherit default :height 1.05))))
    '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832"
-										:weight ultra-bold :width semi-expanded))))
+                                        :weight ultra-bold :width semi-expanded))))
    '(awesome-tab-unselected ((t (:inherit awesome-tab-default :foreground "#ffc66d"))))
    '(term-color-blue ((t (:background "#4068A3" :foreground "#4068A3"))))
    '(term-color-cyan ((t (:background "#4E9B9B" :foreground "#4E9B9B"))))
