@@ -52,6 +52,9 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-lsp-server 'pyright)
+	 (go :variable
+		 go-backend 'lsp
+		 go-format-before-save t)
      agda
      idris
      racket
