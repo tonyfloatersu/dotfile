@@ -52,9 +52,9 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-lsp-server 'pyright)
-	 (go :variable
-		 go-backend 'lsp
-		 go-format-before-save t)
+     (go :variable
+         go-backend 'lsp
+         go-format-before-save t)
      agda
      idris
      racket
@@ -88,7 +88,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(doom-themes
                                       rainbow-mode
                                       all-the-icons
-                                      all-the-icons-dired)
+                                      all-the-icons-dired
+                                      jetbrains-darcula-theme)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
@@ -212,7 +213,7 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(doom-spacegrey
-                         doom-vibrant)
+                         jetbrains-darcula)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -570,7 +571,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
-   '(systemd mu4e-conversation magit treemacs-icons-dired doom-themes dap-mode utop tuareg caml ocp-indent flycheck-ocaml merlin dune treemacs graphql request-deferred wanderlust helm-gtags godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc ggtags flycheck-gometalinter flycheck-golangci-lint counsel-gtags company-go go-mode idris-mode prop-menu yasnippet-snippets yapfify yaml-mode xterm-color ws-butler winum which-key wakatime-mode volatile-highlights uuidgen use-package toc-org symon string-inflection spaceline-all-the-icons smeargle shell-pop restart-emacs rainbow-mode rainbow-delimiters racket-mode pyvenv pytest pyenv-mode py-isort proof-general popwin pippel pipenv pip-requirements persp-mode pdf-tools pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file neotree nameless multi-term mu4e-maildirs-extension mu4e-alert move-text magit-svn magit-gitflow macrostep lsp-ui lsp-haskell lorem-ipsum live-py-mode link-hint indent-guide importmagic idea-darkula-theme hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mu helm-mode-manager helm-make helm-hoogle helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ geiser fuzzy font-lock+ flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline disaster diminish diff-hl define-word cython-mode cquery counsel-projectile company-statistics company-rtags company-posframe company-lsp company-ghc company-coq company-cabal company-c-headers company-anaconda column-enforce-mode cmm-mode clean-aindent-mode clang-format centered-cursor-mode ccls browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(jetbrains-darcula-theme systemd mu4e-conversation magit treemacs-icons-dired doom-themes dap-mode utop tuareg caml ocp-indent flycheck-ocaml merlin dune treemacs graphql request-deferred wanderlust helm-gtags godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc ggtags flycheck-gometalinter flycheck-golangci-lint counsel-gtags company-go go-mode idris-mode prop-menu yasnippet-snippets yapfify yaml-mode xterm-color ws-butler winum which-key wakatime-mode volatile-highlights uuidgen use-package toc-org symon string-inflection spaceline-all-the-icons smeargle shell-pop restart-emacs rainbow-mode rainbow-delimiters racket-mode pyvenv pytest pyenv-mode py-isort proof-general popwin pippel pipenv pip-requirements persp-mode pdf-tools pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file neotree nameless multi-term mu4e-maildirs-extension mu4e-alert move-text magit-svn magit-gitflow macrostep lsp-ui lsp-haskell lorem-ipsum live-py-mode link-hint indent-guide importmagic hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mu helm-mode-manager helm-make helm-hoogle helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ geiser fuzzy font-lock+ flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline disaster diminish diff-hl define-word cython-mode cquery counsel-projectile company-statistics company-rtags company-posframe company-lsp company-ghc company-coq company-cabal company-c-headers company-anaconda column-enforce-mode cmm-mode clean-aindent-mode clang-format centered-cursor-mode ccls browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
  '(wakatime-cli-path "/usr/bin/wakatime")
  '(wakatime-python-bin nil))
 (custom-set-faces
