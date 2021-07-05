@@ -54,7 +54,9 @@ This function should only modify configuration layer settings."
              python-lsp-server 'pyright)
      (go :variable
          go-backend 'lsp
-         go-format-before-save t)
+         go-format-before-save t
+         go-use-golangci-lint t
+         go-tab-width 4)
      agda
      idris
      racket
