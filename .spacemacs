@@ -55,8 +55,7 @@ This function should only modify configuration layer settings."
      (go :variable
          go-backend 'lsp
          go-format-before-save t
-         go-use-golangci-lint t
-         go-tab-width 4)
+         go-use-golangci-lint t)
      agda
      idris
      racket
@@ -76,9 +75,6 @@ This function should only modify configuration layer settings."
             shell-default-width 50
             shell-default-term-shell "/bin/zsh"
             shell-default-position 'right)
-     (wakatime :variables
-               wakatime-api-key "e23b6499-9ae4-4ec2-946b-75b6a891a59e"
-               wakatime-cli-path "/usr/bin/wakatime")
      (version-control :variables
                       version-control-diff-tool 'diff-hl
                       version-control-diff-side 'left
