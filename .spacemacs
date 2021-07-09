@@ -52,9 +52,10 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-lsp-server 'pyright)
-     (go :variable
+     (go :variables
          go-backend 'lsp
          go-format-before-save t
+         go-tab-width 4
          go-use-golangci-lint t)
      agda
      idris
