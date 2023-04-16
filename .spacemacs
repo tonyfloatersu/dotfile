@@ -48,8 +48,11 @@ This function should only modify configuration layer settings."
      (ocaml :variables
             ocaml-format-before-save t)
      (latex :variables
+            latex-backend 'lsp
             latex-enable-folding t
-            latex-enable-auto-fill t)
+            latex-enable-auto-fill t
+            latex-refresh-preview t
+            latex-view-pdf-in-split-window t)
      helm
      emacs-lisp
      (auto-completion :variables
@@ -620,6 +623,7 @@ before packages are loaded."
   (add-to-list 'load-path "/home/anthonysu/.emacs.d/private/awesome-tab/")
   (require 'awesome-tab)
   (awesome-tab-mode t)
+  (require 'pdf-tools)
 
   (global-set-key (kbd "C-c C-<right>") 'awesome-tab-forward)
   (global-set-key (kbd "C-c C-<left>") 'awesome-tab-backward)
