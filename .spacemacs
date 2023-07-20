@@ -38,8 +38,7 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ;; auto-completion
-     ;; better-defaults
+     better-defaults
      systemd
      (spell-checking :variables
                      spell-checking-enable-by-default nil
@@ -66,8 +65,6 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-lsp-server 'pyright)
-     (agda :variables
-           agda-mode-path (shell-command-to-string "agda-mode locate"))
      idris
      racket
      sml
@@ -93,12 +90,8 @@ This function should only modify configuration layer settings."
      markdown
      multiple-cursors
      org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
      ;; spell-checking
      ;; syntax-checking
-     ;; version-control
      (treemacs :vraiables
                treemacs-use-git-mode 'deferred))
 
@@ -624,6 +617,8 @@ before packages are loaded."
   (require 'awesome-tab)
   (awesome-tab-mode t)
   (require 'pdf-tools)
+
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
 
   (global-set-key (kbd "C-c C-<right>") 'awesome-tab-forward)
   (global-set-key (kbd "C-c C-<left>") 'awesome-tab-backward)
