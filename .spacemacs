@@ -39,7 +39,6 @@ This function should only modify configuration layer settings."
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      better-defaults
-     systemd
      (spell-checking :variables
                      spell-checking-enable-by-default nil
                      spell-checking-enable-auto-dictionary t
@@ -59,18 +58,16 @@ This function should only modify configuration layer settings."
      syntax-checking
      lsp
      (go :variables
-         go-tab-width 4)
+         go-tab-width 4
+         go-format-before-save t)
      (rust :variables
            rust-format-on-save t)
      (python :variables
              python-backend 'lsp
              python-lsp-server 'pyright)
-     idris
      racket
      sml
      coq
-     (haskell :variables
-              haskell-completion-backend 'lsp)
      (cmake :variables
             cmake-backend 'lsp)
      (c-c++ :variables
@@ -85,6 +82,8 @@ This function should only modify configuration layer settings."
                       version-control-diff-tool 'diff-hl
                       version-control-diff-side 'left
                       version-control-global-margin t)
+     (javascript :variables
+                 js-indent-level 2)
      pdf
      git
      markdown
@@ -92,7 +91,7 @@ This function should only modify configuration layer settings."
      org
      ;; spell-checking
      ;; syntax-checking
-     (treemacs :vraiables
+     (treemacs :variables
                treemacs-use-git-mode 'deferred))
 
    ;; List of additional packages that will be installed without being wrapped
@@ -292,7 +291,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(doom)
+   dotspacemacs-mode-line-theme '(spacemacs)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -626,8 +625,6 @@ before packages are loaded."
   (global-set-key (kbd "C-c C-<up>") 'awesome-tab-backward-group)
   (setq awesome-tab-height 70)
 
-  (setq treemacs-width 40)
-
   (setq font-latex-fontify-script nil)
   (setq font-latex-fontify-sectioning 'color)
 
@@ -645,6 +642,8 @@ before packages are loaded."
             (function (lambda ()
                         (setq indent-tabs-mode nil
                               tab-width 4))))
+
+  (setq treemacs-width 40)
 
   (setq org-startup-indented t)
   (setq org-bullets-bullet-list '("#" "-" "=" "+" "⁖" "□" "■"))
@@ -674,14 +673,14 @@ before packages are loaded."
     '(diff-hl-change ((t (:background "#3a81c3" :foreground "#3a81c3"))))
     '(diff-hl-insert ((t (:background "#7ccd7c" :foreground "#7ccd7c"))))
     '(diff-hl-delete ((t (:background "#ee6363" :foreground "#ee6363"))))
-	 '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832"
-	                                      :weight ultra-bold :width semi-expanded))))
-	 '(awesome-tab-unselected ((t (:inherit awesome-tab-default :foreground "#ffc66d"))))
-	  '(term-color-blue ((t (:background "#4068A3" :foreground "#4068A3"))))
-	  '(term-color-cyan ((t (:background "#4E9B9B" :foreground "#4E9B9B"))))
-	  '(term-color-green ((t (:background "#59963A" :foreground "#59963A"))))
-	  '(term-color-red ((t (:background "#A93F43" :foreground "#A93F43"))))
-	  '(term-color-white ((t (:background "#7e8a90" :foreground "#7e8a90"))))
+     '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832"
+                                          :weight ultra-bold :width semi-expanded))))
+     '(awesome-tab-unselected ((t (:inherit awesome-tab-default :foreground "#ffc66d"))))
+      '(term-color-blue ((t (:background "#4068A3" :foreground "#4068A3"))))
+      '(term-color-cyan ((t (:background "#4E9B9B" :foreground "#4E9B9B"))))
+      '(term-color-green ((t (:background "#59963A" :foreground "#59963A"))))
+      '(term-color-red ((t (:background "#A93F43" :foreground "#A93F43"))))
+      '(term-color-white ((t (:background "#7e8a90" :foreground "#7e8a90"))))
    )
 
 )
