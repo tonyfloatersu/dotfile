@@ -291,7 +291,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs)
+   dotspacemacs-mode-line-theme '(doom)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -623,7 +623,7 @@ before packages are loaded."
   (global-set-key (kbd "C-c C-<left>") 'awesome-tab-backward)
   (global-set-key (kbd "C-c C-<down>") 'awesome-tab-forward-group)
   (global-set-key (kbd "C-c C-<up>") 'awesome-tab-backward-group)
-  (setq awesome-tab-height 70)
+  (setq awesome-tab-height 100)
 
   (setq font-latex-fontify-script nil)
   (setq font-latex-fontify-sectioning 'color)
@@ -643,7 +643,7 @@ before packages are loaded."
                         (setq indent-tabs-mode nil
                               tab-width 4))))
 
-  (setq treemacs-width 40)
+  (setq treemacs-width 50)
 
   (setq org-startup-indented t)
   (setq org-bullets-bullet-list '("#" "-" "=" "+" "⁖" "□" "■"))
