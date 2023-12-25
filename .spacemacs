@@ -61,7 +61,7 @@ This function should only modify configuration layer settings."
          go-tab-width 4
          go-format-before-save t)
      (rust :variables
-           rust-format-on-save t)
+           rustic-format-on-save t)
      (python :variables
              python-backend 'lsp
              python-lsp-server 'pyright)
@@ -89,7 +89,11 @@ This function should only modify configuration layer settings."
      markdown
      multiple-cursors
      org
-     ;; spell-checking
+     (spell-checking :variables
+                     spell-checking-enable-auto-dictionary t
+                     enable-flyspell-auto-completion t)
+     solidity
+     yaml
      ;; syntax-checking
      (treemacs :variables
                treemacs-use-git-mode 'deferred))
