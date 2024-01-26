@@ -88,7 +88,8 @@ This function should only modify configuration layer settings."
      git
      markdown
      multiple-cursors
-     org
+	 tree-sitter
+	 org
      (spell-checking :variables
                      spell-checking-enable-auto-dictionary t
                      enable-flyspell-auto-completion t)
@@ -658,6 +659,8 @@ before packages are loaded."
                                  ("INPROGRESS" :foreground "#0098dd" :weight normal :underline t)
                                  ("DONE" :foreground "#50a14f" :weight normal :underline t)
                                  ("CANCELLED" :foreground "#ff6480" :weight normal :underline t)))
+
+  (setq helm-allow-mouse nil)
 
   (add-to-list 'auto-mode-alist '("\\.tcc" . c++-mode))
   (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
