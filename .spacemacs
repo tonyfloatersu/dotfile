@@ -40,7 +40,6 @@ This function should only modify configuration layer settings."
      ;; ----------------------------------------------------------------
      better-defaults
      (spell-checking :variables
-                     spell-checking-enable-by-default nil
                      spell-checking-enable-auto-dictionary t
                      enable-flyspell-auto-completion t)
      (ocaml :variables
@@ -90,9 +89,6 @@ This function should only modify configuration layer settings."
      multiple-cursors
 	 tree-sitter
 	 org
-     (spell-checking :variables
-                     spell-checking-enable-auto-dictionary t
-                     enable-flyspell-auto-completion t)
      solidity
      yaml
      ;; syntax-checking
