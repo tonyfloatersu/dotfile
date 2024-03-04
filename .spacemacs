@@ -40,6 +40,7 @@ This function should only modify configuration layer settings."
      ;; ----------------------------------------------------------------
      better-defaults
      (spell-checking :variables
+                     spell-checking-enable-by-default nil
                      spell-checking-enable-auto-dictionary t
                      enable-flyspell-auto-completion t)
      (ocaml :variables
@@ -87,8 +88,8 @@ This function should only modify configuration layer settings."
      git
      markdown
      multiple-cursors
-	 tree-sitter
-	 org
+     tree-sitter
+     org
      solidity
      yaml
      ;; syntax-checking
@@ -619,6 +620,11 @@ before packages are loaded."
   (require 'pdf-tools)
 
   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+
+  (with-eval-after-load "ispell"
+    (setq ispell-program-name "hunspell")
+    (ispell-set-spellchecker-params)
+    (setq ispell-dictionary "en_US"))
 
   (global-set-key (kbd "C-c C-<right>") 'awesome-tab-forward)
   (global-set-key (kbd "C-c C-<left>") 'awesome-tab-backward)
