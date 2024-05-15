@@ -90,9 +90,8 @@ This function should only modify configuration layer settings."
      multiple-cursors
      tree-sitter
      org
-     solidity
+     (colors :variables colors-enable-nyan-cat-progress-bar (display-graphic-p))
      yaml
-     ;; syntax-checking
      (treemacs :variables
                treemacs-use-git-mode 'deferred))
 
@@ -105,7 +104,6 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(doom-themes
-                                      rainbow-mode
                                       all-the-icons
                                       all-the-icons-dired)
 
@@ -115,7 +113,8 @@ This function should only modify configuration layer settings."
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(vim-empty-lines-mode
                                     vi-tilde-fringe
-                                    flycheck-ocaml)
+                                    flycheck-ocaml
+                                    restart-emacs)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -693,7 +692,3 @@ before packages are loaded."
    )
 
 )
-
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
