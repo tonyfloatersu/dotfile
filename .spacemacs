@@ -85,7 +85,10 @@ This function should only modify configuration layer settings."
      (javascript :variables
                  js-indent-level 2)
      pdf
-     git
+     (git :variables
+		  git-enable-magit-delta-plugin t
+		  git-enable-magit-gitflow-plugin t
+		  git-enable-magit-todos-plugin t)
      markdown
      multiple-cursors
      tree-sitter
@@ -113,8 +116,7 @@ This function should only modify configuration layer settings."
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(vim-empty-lines-mode
                                     vi-tilde-fringe
-                                    flycheck-ocaml
-                                    restart-emacs)
+                                    flycheck-ocaml)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
