@@ -33,70 +33,70 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
-     ;; `M-m f e R' (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
-     better-defaults
-     (spell-checking :variables
-                     spell-checking-enable-by-default nil
-                     spell-checking-enable-auto-dictionary t
-                     enable-flyspell-auto-completion t)
-     (ocaml :variables
-            ocaml-format-before-save t)
-     (latex :variables
-            latex-backend 'lsp
-            latex-enable-folding t
-            latex-enable-auto-fill t
-            latex-refresh-preview t
-            latex-view-pdf-in-split-window t)
-     helm
-     emacs-lisp
-     (auto-completion :variables
-                      auto-completion-use-company-box t)
-     syntax-checking
-     lsp
-     (go :variables
-         go-tab-width 4
-         go-format-before-save t)
-     (rust :variables
-           rustic-format-on-save t)
-     (python :variables
-             python-backend 'lsp
-             python-lsp-server 'pyright)
-     racket
-     sml
-     coq
-     (cmake :variables
-            cmake-backend 'lsp)
-     (c-c++ :variables
-            c-c++-backend 'lsp-ccls
-            c-c++-enable-clang-format-on-save t)
-     (shell :variables
-            shell-default-shell 'ansi-term
-            shell-default-width 50
-            shell-default-term-shell "/bin/zsh"
-            shell-default-position 'right)
-     (version-control :variables
-                      version-control-diff-tool 'diff-hl
-                      version-control-diff-side 'left
-                      version-control-global-margin t)
-     (javascript :variables
-                 js-indent-level 2)
-     pdf
-     (git :variables
+	 ;; ----------------------------------------------------------------
+	 ;; Example of useful layers you may want to use right away.
+	 ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
+	 ;; `M-m f e R' (Emacs style) to install them.
+	 ;; ----------------------------------------------------------------
+	 better-defaults
+	 (spell-checking :variables
+					 spell-checking-enable-by-default nil
+					 spell-checking-enable-auto-dictionary t
+					 enable-flyspell-auto-completion t)
+	 (ocaml :variables
+			ocaml-format-before-save t)
+	 (latex :variables
+			latex-backend 'lsp
+			latex-enable-folding t
+			latex-enable-auto-fill t
+			latex-refresh-preview t
+			latex-view-pdf-in-split-window t)
+	 helm
+	 emacs-lisp
+	 (auto-completion :variables
+					  auto-completion-use-company-box t)
+	 syntax-checking
+	 lsp
+	 (go :variables
+		 go-tab-width 4
+		 go-format-before-save t)
+	 (rust :variables
+		   rustic-format-on-save t)
+	 (python :variables
+			 python-backend 'lsp
+			 python-lsp-server 'pyright)
+	 racket
+	 sml
+	 coq
+	 (cmake :variables
+			cmake-backend 'lsp)
+	 (c-c++ :variables
+			c-c++-backend 'lsp-ccls
+			c-c++-enable-clang-format-on-save t)
+	 (shell :variables
+			shell-default-shell 'ansi-term
+			shell-default-width 50
+			shell-default-term-shell "/bin/zsh"
+			shell-default-position 'right)
+	 (version-control :variables
+					  version-control-diff-tool 'diff-hl
+					  version-control-diff-side 'left
+					  version-control-global-margin t)
+	 (javascript :variables
+				 js-indent-level 2)
+	 pdf
+	 (git :variables
 		  git-enable-magit-delta-plugin t
 		  git-enable-magit-gitflow-plugin t
 		  git-enable-magit-todos-plugin t)
-     markdown
-     multiple-cursors
-     tree-sitter
-     org
-     (colors :variables colors-enable-nyan-cat-progress-bar (display-graphic-p))
-     yaml
-     (treemacs :variables
-               treemacs-use-git-mode 'deferred))
+	 markdown
+	 multiple-cursors
+	 tree-sitter
+	 org
+	 (colors :variables colors-enable-nyan-cat-progress-bar (display-graphic-p))
+	 yaml
+	 (treemacs :variables
+			   treemacs-use-git-mode 'deferred))
 
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -107,16 +107,16 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(doom-themes
-                                      all-the-icons
-                                      all-the-icons-dired)
+									  all-the-icons
+									  all-the-icons-dired)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(vim-empty-lines-mode
-                                    vi-tilde-fringe
-                                    flycheck-ocaml)
+									vi-tilde-fringe
+									flycheck-ocaml)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -244,7 +244,7 @@ It should only modify the values of Spacemacs settings."
    ;; number is the project limit and the second the limit on the recent files
    ;; within a project.
    dotspacemacs-startup-lists '((recents . 20)
-                                (projects . 10))
+								(projects . 10))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -258,7 +258,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil, show file icons for entries and headings on Spacemacs home buffer.
    ;; This has no effect in terminal or if "all-the-icons" package or the font
    ;; is not installed. (default nil)
-   dotspacemacs-startup-buffer-show-icons nil
+   dotspacemacs-startup-buffer-show-icons t
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
@@ -284,8 +284,8 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light
-                         doom-spacegrey)
+						 spacemacs-light
+						 doom-spacegrey)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -304,9 +304,9 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 10.0
-                               :weight normal
-                               :width normal)
+							   :size 10.0
+							   :weight normal
+							   :width normal)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -590,7 +590,7 @@ default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
   (spacemacs/load-spacemacs-env)
-)
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -598,7 +598,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-)
+  )
 
 
 (defun dotspacemacs/user-load ()
@@ -606,7 +606,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-)
+  )
 
 
 (defun dotspacemacs/user-config ()
@@ -623,9 +623,9 @@ before packages are loaded."
   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
 
   (with-eval-after-load "ispell"
-    (setq ispell-program-name "hunspell")
-    (ispell-set-spellchecker-params)
-    (setq ispell-dictionary "en_US"))
+	(setq ispell-program-name "hunspell")
+	(ispell-set-spellchecker-params)
+	(setq ispell-dictionary "en_US"))
 
   (global-set-key (kbd "C-c C-<right>") 'awesome-tab-forward)
   (global-set-key (kbd "C-c C-<left>") 'awesome-tab-backward)
@@ -637,8 +637,6 @@ before packages are loaded."
   (setq font-latex-fontify-sectioning 'color)
 
   (setq LaTeX-item-indent 0)
-  (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
-  (add-hook 'latex-mode-hook (lambda () (set-fill-column 120)))
 
   (setq-default fill-column 80)
 
@@ -647,21 +645,21 @@ before packages are loaded."
   (global-set-key (kbd ",") #'(lambda () (interactive) (insert ", ")))
   (setq-default line-spacing 0.2)
   (add-hook 'python-mode-hook
-            (function (lambda ()
-                        (setq indent-tabs-mode nil
-                              tab-width 4))))
+			(function (lambda ()
+						(setq indent-tabs-mode nil
+							  tab-width 4))))
 
   (setq treemacs-width 50)
 
   (setq org-startup-indented t)
   (setq org-bullets-bullet-list '("#" "-" "=" "+" "⁖" "□" "■"))
   (setq org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)"
-                                      "|" "DONE(d)" "CANCELLED(c)"))
-        org-todo-keyword-faces '(("TODO" :foreground "#7c7c75" :weight normal :underline t)
-                                 ("WAITING" :foreground "#9f7efe" :weight normal :underline t)
-                                 ("INPROGRESS" :foreground "#0098dd" :weight normal :underline t)
-                                 ("DONE" :foreground "#50a14f" :weight normal :underline t)
-                                 ("CANCELLED" :foreground "#ff6480" :weight normal :underline t)))
+									  "|" "DONE(d)" "CANCELLED(c)"))
+		org-todo-keyword-faces '(("TODO" :foreground "#7c7c75" :weight normal :underline t)
+								 ("WAITING" :foreground "#9f7efe" :weight normal :underline t)
+								 ("INPROGRESS" :foreground "#0098dd" :weight normal :underline t)
+								 ("DONE" :foreground "#50a14f" :weight normal :underline t)
+								 ("CANCELLED" :foreground "#ff6480" :weight normal :underline t)))
 
   (setq helm-allow-mouse nil)
 
@@ -674,23 +672,23 @@ before packages are loaded."
   (setq-default indent-tabs-mode t)
   (setq lsp-file-watch-threshold nil)
   (defun projectile-project-find-function (dir)
-    (let* ((root (projectile-project-root dir)))
-      (and root (cons 'transient root))))
+	(let* ((root (projectile-project-root dir)))
+	  (and root (cons 'transient root))))
   (with-eval-after-load
-      'project
-    (add-to-list 'project-find-functions 'projectile-project-find-function))
+	  'project
+	(add-to-list 'project-find-functions 'projectile-project-find-function))
   (custom-set-faces
-    '(diff-hl-change ((t (:background "#3a81c3" :foreground "#3a81c3"))))
-    '(diff-hl-insert ((t (:background "#7ccd7c" :foreground "#7ccd7c"))))
-    '(diff-hl-delete ((t (:background "#ee6363" :foreground "#ee6363"))))
-     '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832"
-                                          :weight ultra-bold :width semi-expanded))))
-     '(awesome-tab-unselected ((t (:inherit awesome-tab-default :foreground "#ffc66d"))))
-      '(term-color-blue ((t (:background "#4068A3" :foreground "#4068A3"))))
-      '(term-color-cyan ((t (:background "#4E9B9B" :foreground "#4E9B9B"))))
-      '(term-color-green ((t (:background "#59963A" :foreground "#59963A"))))
-      '(term-color-red ((t (:background "#A93F43" :foreground "#A93F43"))))
-      '(term-color-white ((t (:background "#7e8a90" :foreground "#7e8a90"))))
+   '(diff-hl-change ((t (:background "#3a81c3" :foreground "#3a81c3"))))
+   '(diff-hl-insert ((t (:background "#7ccd7c" :foreground "#7ccd7c"))))
+   '(diff-hl-delete ((t (:background "#ee6363" :foreground "#ee6363"))))
+   '(awesome-tab-selected ((t (:inherit awesome-tab-default :foreground "#CC7832" :overline "#CC7832"
+										:weight ultra-bold :width semi-expanded))))
+   '(awesome-tab-unselected ((t (:inherit awesome-tab-default :foreground "#ffc66d"))))
+   '(term-color-blue ((t (:background "#4068A3" :foreground "#4068A3"))))
+   '(term-color-cyan ((t (:background "#4E9B9B" :foreground "#4E9B9B"))))
+   '(term-color-green ((t (:background "#59963A" :foreground "#59963A"))))
+   '(term-color-red ((t (:background "#A93F43" :foreground "#A93F43"))))
+   '(term-color-white ((t (:background "#7e8a90" :foreground "#7e8a90"))))
    )
 
-)
+  )
